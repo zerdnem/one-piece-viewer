@@ -6,24 +6,26 @@ const EpisodeCard = ({ episodeNumber, arcName, sagaName }) => {
 
   return (
     <Link to={`/watch/${episodeNumber}`}>
-      <div className="bg-gradient-to-r from-op-dark to-gray-800 rounded-lg p-4 hover:scale-105 transition-all duration-200 cursor-pointer shadow-lg hover:shadow-xl hover:shadow-op-orange/30 border border-gray-700 hover:border-op-orange">
-        <div className="flex items-center justify-between">
+      <div className="group bg-gradient-to-br from-op-dark to-gray-800 rounded-xl p-5 hover:scale-105 transition-all duration-300 cursor-pointer shadow-xl hover:shadow-2xl hover:shadow-op-orange/40 border-2 border-gray-700 hover:border-op-orange overflow-hidden relative">
+        {/* Animated background effect */}
+        <div className="absolute inset-0 bg-gradient-to-r from-op-orange/0 via-op-orange/5 to-op-orange/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+        
+        <div className="relative flex items-center justify-between">
           <div className="flex-1">
-            <div className="text-op-orange font-bold text-xl mb-1">
+            <div className="text-transparent bg-clip-text bg-gradient-to-r from-op-orange to-yellow-400 font-black text-2xl mb-2">
               Episode {episodeNumber}
             </div>
-            <div className="text-white text-sm mb-2 line-clamp-1">
+            <div className="text-white text-base mb-2 line-clamp-1 font-semibold">
               {episodeTitle}
             </div>
-            <div className="text-gray-400 text-xs">
+            <div className="text-gray-400 text-sm">
               {arcName} • {sagaName}
             </div>
           </div>
           <div className="ml-4">
-            <button className="bg-op-orange hover:bg-orange-600 text-white rounded-full p-3 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <button className="bg-gradient-to-r from-op-orange to-red-500 hover:from-yellow-400 hover:to-op-orange text-white rounded-full p-3 transition-all group-hover:scale-110 shadow-lg">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
               </svg>
             </button>
           </div>

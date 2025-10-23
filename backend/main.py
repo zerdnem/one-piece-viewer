@@ -2,9 +2,9 @@
 FastAPI backend for One Piece Viewer
 Video scraping and caching API
 """
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 import redis
 import os
 from dotenv import load_dotenv
@@ -20,12 +20,12 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS configuration
-origins = os.getenv('CORS_ORIGINS', 'http://localhost:5173').split(',')
+# CORS configuration - Allow LAN access
+origins = os.getenv('CORS_ORIGINS', '*').split(',')
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"] if origins == ['*'] else origins,  # Allow all origins for LAN access
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -183,13 +183,12 @@ async def clear_cache():
 
 
 @app.get("/api/proxy/video")
-async def proxy_video(url: str):
+async def proxy_video(url: str, request: Request):
     """
-    Proxy video stream with proper headers
+    Proxy video stream with proper headers and Range support
     This allows the frontend to play videos that require referrer headers
     """
     import requests
-    from fastapi.responses import StreamingResponse
     
     try:
         # Set proper headers for the video source
@@ -198,25 +197,48 @@ async def proxy_video(url: str):
             'Referer': 'https://allmanga.to',
             'Accept': '*/*',
             'Accept-Encoding': 'identity',
-            'Range': 'bytes=0-',
         }
         
-        # Stream the video
-        response = requests.get(url, headers=headers, stream=True, timeout=30)
+        # Pass through Range header if present (for video seeking)
+        range_header = request.headers.get('range')
+        if range_header:
+            headers['Range'] = range_header
+        
+        # Stream the video with a larger timeout and chunk size
+        response = requests.get(url, headers=headers, stream=True, timeout=60)
         
         if response.status_code not in [200, 206]:
             raise HTTPException(status_code=response.status_code, detail="Video source unavailable")
         
-        # Return streaming response
+        # Prepare response headers
+        response_headers = {
+            'Accept-Ranges': 'bytes',
+            'Cache-Control': 'public, max-age=3600',
+        }
+        
+        # Only include Content-Length if we have it and it's reliable
+        content_length = response.headers.get('content-length')
+        if content_length and response.status_code == 200:
+            response_headers['Content-Length'] = content_length
+        
+        # Include Content-Range if present (for partial content)
+        content_range = response.headers.get('content-range')
+        if content_range:
+            response_headers['Content-Range'] = content_range
+        
+        # Return streaming response with larger chunk size for better performance
         return StreamingResponse(
-            response.iter_content(chunk_size=8192),
+            response.iter_content(chunk_size=65536),  # 64KB chunks
+            status_code=response.status_code,
             media_type=response.headers.get('content-type', 'video/mp4'),
-            headers={
-                'Accept-Ranges': 'bytes',
-                'Content-Length': response.headers.get('content-length', ''),
-            }
+            headers=response_headers
         )
         
+    except requests.RequestException as e:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Error fetching video from source: {str(e)}"
+        )
     except Exception as e:
         raise HTTPException(
             status_code=500,
@@ -226,12 +248,21 @@ async def proxy_video(url: str):
 
 if __name__ == "__main__":
     import uvicorn
+    import socket
     
     host = os.getenv('API_HOST', '0.0.0.0')
     port = int(os.getenv('API_PORT', 8000))
     
-    print(f"\n🏴‍☠️ Starting One Piece Viewer API on {host}:{port}")
-    print(f"📡 CORS enabled for: {origins}")
+    # Get local IP for LAN access info
+    try:
+        local_ip = socket.gethostbyname(socket.gethostname())
+    except:
+        local_ip = "Unable to detect"
+    
+    print(f"\n🏴‍☠️ Starting One Piece Viewer API")
+    print(f"📍 Local:   http://localhost:{port}")
+    print(f"📍 Network: http://{local_ip}:{port}")
+    print(f"📡 CORS: {'All origins allowed (LAN enabled)' if origins == ['*'] else str(origins)}")
     print(f"💾 Redis caching: {'enabled' if REDIS_AVAILABLE else 'disabled'}\n")
     
     uvicorn.run(

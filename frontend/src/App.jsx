@@ -7,17 +7,19 @@ import Watch from './pages/Watch';
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 via-op-dark to-gray-900">
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 via-op-dark to-gray-900 w-full">
         <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/arc/:arcId" element={<ArcView />} />
-          <Route path="/watch/:episodeNumber" element={<Watch />} />
-        </Routes>
+        <main className="w-full">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/arc/:arcId" element={<ArcView />} />
+            <Route path="/watch/:episodeNumber" element={<Watch />} />
+          </Routes>
+        </main>
         
         {/* Footer */}
-        <footer className="bg-op-dark border-t border-gray-800 py-6 mt-12">
-          <div className="container mx-auto px-4 text-center text-gray-400">
+        <footer className="bg-op-dark border-t border-gray-800 py-6 mt-12 w-full">
+          <div className="container mx-auto px-4 text-center text-gray-400 max-w-7xl">
             <p className="mb-2">One Piece Viewer - Navigate the Grand Line</p>
             <p className="text-sm">
               Built with React + Tailwind CSS | Data from One Piece Wiki

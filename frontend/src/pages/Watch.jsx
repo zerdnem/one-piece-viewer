@@ -64,7 +64,12 @@ const Watch = () => {
 
         {/* Video Player */}
         <div className="mb-8">
-          <VideoPlayer episodeNumber={epNum} />
+          <VideoPlayer 
+            key={epNum}
+            episodeNumber={epNum} 
+            nextEpisode={epNum < TOTAL_EPISODES ? epNum + 1 : null}
+            hasNextEpisode={epNum < TOTAL_EPISODES}
+          />
         </div>
 
         {/* Navigation Controls */}
