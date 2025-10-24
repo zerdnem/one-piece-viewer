@@ -40,8 +40,18 @@ const VideoPlayer = ({ episodeNumber, nextEpisode, hasNextEpisode }) => {
   const hasAutoSkippedIntroRef = useRef(false);
   const hasAutoSkippedOutroRef = useRef(false);
 
-  // Fetch skip timestamps from AniSkip API
+  // Fetch skip timestamps from AniSkip API (only for regular episodes)
   useEffect(() => {
+    // Skip timestamp fetching is only for regular episodes, not movies or specials
+    const isMovie = typeof episodeNumber === 'string' && episodeNumber.startsWith('movie-');
+    const isSpecial = typeof episodeNumber === 'string' && episodeNumber.startsWith('special-');
+    
+    if (isMovie || isSpecial) {
+      // Movies and specials don't have consistent intro/outro patterns
+      setSkipTimestamps(null);
+      return;
+    }
+    
     const fetchSkipTimestamps = async () => {
       try {
         // AniSkip API endpoint
@@ -103,8 +113,8 @@ const VideoPlayer = ({ episodeNumber, nextEpisode, hasNextEpisode }) => {
         setLoading(true);
         setError(null);
         
-        // Call backend API
-        const response = await axios.get(`${API_URL}/api/episode/${episodeNumber}/video`);
+        // Use the new content endpoint that supports episodes, movies, and specials
+        const response = await axios.get(`${API_URL}/api/content/${episodeNumber}/video`);
         
         if (response.data.success) {
           setVideoData(response.data);
@@ -358,11 +368,15 @@ const VideoPlayer = ({ episodeNumber, nextEpisode, hasNextEpisode }) => {
   };
 
   if (loading) {
+    const isMovie = typeof episodeNumber === 'string' && episodeNumber.startsWith('movie-');
+    const isSpecial = typeof episodeNumber === 'string' && episodeNumber.startsWith('special-');
+    const contentLabel = isMovie ? 'Movie' : isSpecial ? 'Special' : `Episode ${episodeNumber}`;
+    
     return (
       <div className="w-full aspect-video bg-op-dark rounded-xl flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-op-orange mx-auto mb-4"></div>
-          <p className="text-white text-lg">Loading Episode {episodeNumber}...</p>
+          <p className="text-white text-lg">Loading {contentLabel}...</p>
           <p className="text-gray-400 text-sm mt-2">Fetching video from sources...</p>
         </div>
       </div>

@@ -329,3 +329,226 @@ export const episodeTitles = {
 
 export const TOTAL_EPISODES = 1100; // Current total (as of 2024)
 
+// Movies
+export const onePieceMovies = [
+  {
+    id: 1,
+    title: "One Piece: The Movie",
+    year: 2000,
+    description: "The crew faces off against El Drago and his crew in search of the legendary treasure.",
+    color: "from-red-600 to-orange-600",
+    duration: "51 min"
+  },
+  {
+    id: 2,
+    title: "Clockwork Island Adventure",
+    year: 2001,
+    description: "The crew must rescue the Going Merry from the Trump Pirates.",
+    color: "from-blue-600 to-cyan-600",
+    duration: "60 min"
+  },
+  {
+    id: 3,
+    title: "Chopper's Kingdom on the Island of Strange Animals",
+    year: 2002,
+    description: "Chopper becomes the king of an island of strange animals.",
+    color: "from-pink-600 to-rose-600",
+    duration: "56 min"
+  },
+  {
+    id: 4,
+    title: "Dead End Adventure",
+    year: 2003,
+    description: "The crew enters a dangerous pirate race with high stakes.",
+    color: "from-purple-600 to-indigo-600",
+    duration: "95 min"
+  },
+  {
+    id: 5,
+    title: "The Curse of the Sacred Sword",
+    year: 2004,
+    description: "Zoro reunites with a childhood friend and a mysterious sword.",
+    color: "from-green-700 to-emerald-700",
+    duration: "95 min"
+  },
+  {
+    id: 6,
+    title: "Baron Omatsuri and the Secret Island",
+    year: 2005,
+    description: "The crew visits a mysterious resort island with dark secrets.",
+    color: "from-orange-600 to-red-700",
+    duration: "91 min"
+  },
+  {
+    id: 7,
+    title: "The Giant Mechanical Soldier of Karakuri Castle",
+    year: 2006,
+    description: "The crew explores a mechanical island and its ancient fortress.",
+    color: "from-gray-700 to-slate-700",
+    duration: "94 min"
+  },
+  {
+    id: 8,
+    title: "Episode of Alabasta: The Desert Princess and the Pirates",
+    year: 2007,
+    description: "A retelling of the Alabasta arc with enhanced animation.",
+    color: "from-yellow-600 to-amber-700",
+    duration: "90 min"
+  },
+  {
+    id: 9,
+    title: "Episode of Chopper Plus: Bloom in Winter, Miracle Sakura",
+    year: 2008,
+    description: "An alternate retelling of the Drum Island arc.",
+    color: "from-pink-500 to-fuchsia-600",
+    duration: "113 min"
+  },
+  {
+    id: 10,
+    title: "Strong World",
+    year: 2009,
+    description: "The crew faces Shiki the Golden Lion, a legendary pirate. Written by Oda!",
+    color: "from-yellow-500 to-orange-600",
+    duration: "113 min",
+    featured: true
+  },
+  {
+    id: 11,
+    title: "One Piece 3D: Straw Hat Chase",
+    year: 2011,
+    description: "A bird steals Luffy's precious straw hat.",
+    color: "from-blue-500 to-sky-500",
+    duration: "30 min"
+  },
+  {
+    id: 12,
+    title: "One Piece Film: Z",
+    year: 2012,
+    description: "The crew battles a former Marine Admiral with a vendetta.",
+    color: "from-purple-700 to-blue-800",
+    duration: "108 min",
+    featured: true
+  },
+  {
+    id: 13,
+    title: "One Piece Film: Gold",
+    year: 2016,
+    description: "The crew visits Gran Tesoro, a luxurious entertainment city-ship.",
+    color: "from-yellow-500 to-amber-600",
+    duration: "120 min",
+    featured: true
+  },
+  {
+    id: 14,
+    title: "One Piece: Stampede",
+    year: 2019,
+    description: "Pirates from around the world gather for the ultimate treasure hunt.",
+    color: "from-red-600 to-orange-600",
+    duration: "101 min",
+    featured: true
+  },
+  {
+    id: 15,
+    title: "One Piece Film: Red",
+    year: 2022,
+    description: "Uta, the world's greatest diva and Shanks' daughter, holds a concert.",
+    color: "from-red-500 to-pink-600",
+    duration: "115 min",
+    featured: true
+  }
+];
+
+// TV Specials & OVAs
+export const onePieceSpecials = [
+  {
+    id: 1,
+    title: "Romance Dawn Story",
+    year: 2008,
+    type: "OVA",
+    description: "The original pilot version of One Piece with different character designs.",
+    color: "from-red-500 to-orange-500",
+    duration: "34 min"
+  },
+  {
+    id: 2,
+    title: "Episode of Nami: Tears of a Navigator and the Bonds of Friends",
+    year: 2012,
+    type: "TV Special",
+    description: "A retelling of the Arlong Park arc focusing on Nami's story.",
+    color: "from-blue-600 to-cyan-600",
+    duration: "106 min"
+  },
+  {
+    id: 3,
+    title: "Episode of Luffy: Adventure on Hand Island",
+    year: 2012,
+    type: "TV Special",
+    description: "Luffy and crew face enemies who can control the weather.",
+    color: "from-red-600 to-yellow-600",
+    duration: "102 min"
+  },
+  {
+    id: 4,
+    title: "Episode of Merry: The Tale of One More Friend",
+    year: 2013,
+    type: "TV Special",
+    description: "The story of the Going Merry from its creation to farewell.",
+    color: "from-orange-500 to-amber-600",
+    duration: "106 min"
+  },
+  {
+    id: 5,
+    title: "3D2Y: Overcome Ace's Death!",
+    year: 2014,
+    type: "TV Special",
+    description: "Luffy's training during the two-year timeskip with Rayleigh.",
+    color: "from-gray-700 to-slate-800",
+    duration: "108 min"
+  },
+  {
+    id: 6,
+    title: "Episode of Sabo: The Three Brothers' Bond",
+    year: 2015,
+    type: "TV Special",
+    description: "The bonds between Luffy, Ace, and Sabo through the Dressrosa arc.",
+    color: "from-orange-600 to-red-700",
+    duration: "107 min"
+  },
+  {
+    id: 7,
+    title: "Heart of Gold",
+    year: 2016,
+    type: "TV Special",
+    description: "The crew searches for a legendary treasure that grants eternal life.",
+    color: "from-yellow-500 to-amber-600",
+    duration: "118 min"
+  },
+  {
+    id: 8,
+    title: "Episode of East Blue: Luffy and His Four Crewmates' Great Adventure",
+    year: 2017,
+    type: "TV Special",
+    description: "A retelling of the East Blue saga with updated animation.",
+    color: "from-blue-700 to-indigo-700",
+    duration: "106 min"
+  },
+  {
+    id: 9,
+    title: "Episode of Skypiea",
+    year: 2018,
+    type: "TV Special",
+    description: "A condensed retelling of the Skypiea arc.",
+    color: "from-sky-500 to-blue-500",
+    duration: "104 min"
+  },
+  {
+    id: 10,
+    title: "One Piece: Defeat Him! The Pirate Ganzack!",
+    year: 1998,
+    type: "OVA",
+    description: "The earliest One Piece anime production, before the TV series.",
+    color: "from-teal-600 to-cyan-600",
+    duration: "26 min"
+  }
+];
+

@@ -141,6 +141,136 @@ async def get_episode_video(episode_num: int):
         )
 
 
+@app.get("/api/content/{content_id}/video")
+async def get_content_video(content_id: str):
+    """
+    Get video URL for One Piece content (episodes, movies, specials)
+    
+    Args:
+        content_id: Content identifier (e.g., "1", "movie-10", "special-5")
+    
+    Returns:
+        JSON with video URLs and metadata
+    """
+    # Parse content ID
+    content_type = "episode"
+    search_query = "One Piece"
+    episode_num = None
+    
+    try:
+        if content_id.startswith("movie-"):
+            content_type = "movie"
+            movie_id = int(content_id.replace("movie-", ""))
+            
+            # Map movie IDs to searchable names
+            movie_names = {
+                1: "One Piece The Movie",
+                2: "One Piece Clockwork Island Adventure",
+                3: "One Piece Chopper's Kingdom",
+                4: "One Piece Dead End Adventure",
+                5: "One Piece Curse of the Sacred Sword",
+                6: "One Piece Baron Omatsuri",
+                7: "One Piece Giant Mechanical Soldier",
+                8: "One Piece Episode of Alabasta",
+                9: "One Piece Episode of Chopper Plus",
+                10: "One Piece Strong World",
+                11: "One Piece 3D Straw Hat Chase",
+                12: "One Piece Film Z",
+                13: "One Piece Film Gold",
+                14: "One Piece Stampede",
+                15: "One Piece Film Red"
+            }
+            search_query = movie_names.get(movie_id, f"One Piece Movie {movie_id}")
+            episode_num = 1  # Movies are typically single episodes
+            
+        elif content_id.startswith("special-"):
+            content_type = "special"
+            special_id = int(content_id.replace("special-", ""))
+            
+            # Map special IDs to searchable names
+            special_names = {
+                1: "One Piece Romance Dawn Story",
+                2: "One Piece Episode of Nami",
+                3: "One Piece Episode of Luffy",
+                4: "One Piece Episode of Merry",
+                5: "One Piece 3D2Y",
+                6: "One Piece Episode of Sabo",
+                7: "One Piece Heart of Gold",
+                8: "One Piece Episode of East Blue",
+                9: "One Piece Episode of Skypiea",
+                10: "One Piece Defeat Him The Pirate Ganzack"
+            }
+            search_query = special_names.get(special_id, f"One Piece Special {special_id}")
+            episode_num = 1  # Specials are typically single episodes
+            
+        else:
+            # Regular episode
+            episode_num = int(content_id)
+            if episode_num < 1 or episode_num > 1200:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Invalid episode number. Must be between 1 and 1200."
+                )
+            search_query = "One Piece"
+            
+    except ValueError:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid content ID format: {content_id}"
+        )
+    
+    # Check cache first (if Redis is available)
+    cache_key = f"onepiece_{content_type}_{content_id}"
+    
+    if REDIS_AVAILABLE and redis_client:
+        try:
+            cached_data = redis_client.get(cache_key)
+            if cached_data:
+                import json
+                return JSONResponse(content={
+                    **json.loads(cached_data),
+                    'cached': True
+                })
+        except Exception as e:
+            print(f"Cache read error: {e}")
+    
+    # Scrape video URL
+    try:
+        result = video_scraper.get_video_url(search_query, episode_num)
+        
+        if not result or not result.get('success'):
+            raise HTTPException(
+                status_code=404,
+                detail=f"Video not found for {content_type} {content_id}. {result.get('error', '')}"
+            )
+        
+        # Cache the result (if Redis is available)
+        if REDIS_AVAILABLE and redis_client:
+            try:
+                import json
+                redis_client.setex(
+                    cache_key,
+                    CACHE_DURATION,
+                    json.dumps(result)
+                )
+            except Exception as e:
+                print(f"Cache write error: {e}")
+        
+        return JSONResponse(content={
+            **result,
+            'cached': False,
+            'content_type': content_type
+        })
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error fetching video: {str(e)}"
+        )
+
+
 @app.get("/api/test/scrape")
 async def test_scrape():
     """

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { onePieceArcs, allEpisodes, TOTAL_EPISODES } from '../data/onePieceData';
+import { onePieceArcs, allEpisodes, TOTAL_EPISODES, onePieceMovies, onePieceSpecials } from '../data/onePieceData';
 import ArcCard from '../components/ArcCard';
+import MediaCard from '../components/MediaCard';
 import SearchBar from '../components/SearchBar';
 
 const Home = () => {
@@ -100,24 +101,36 @@ const Home = () => {
           </div>
 
           {/* Quick Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
-            <div className="bg-gradient-to-br from-op-orange/20 to-red-900/20 rounded-xl p-8 text-center border-2 border-op-orange/30 hover:border-op-orange transition-colors duration-300 hover:scale-105 transform">
-              <div className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-op-orange to-yellow-400 mb-2">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-6xl mx-auto mb-12">
+            <div className="bg-gradient-to-br from-op-orange/20 to-red-900/20 rounded-xl p-6 text-center border-2 border-op-orange/30 hover:border-op-orange transition-colors duration-300 hover:scale-105 transform">
+              <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-op-orange to-yellow-400 mb-2">
                 {TOTAL_EPISODES}+
               </div>
-              <div className="text-gray-200 font-semibold text-lg">Total Episodes</div>
+              <div className="text-gray-200 font-semibold text-sm">Episodes</div>
             </div>
-            <div className="bg-gradient-to-br from-blue-900/20 to-purple-900/20 rounded-xl p-8 text-center border-2 border-blue-500/30 hover:border-blue-500 transition-colors duration-300 hover:scale-105 transform">
-              <div className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 mb-2">
+            <div className="bg-gradient-to-br from-red-800/20 to-yellow-800/20 rounded-xl p-6 text-center border-2 border-red-500/30 hover:border-red-500 transition-colors duration-300 hover:scale-105 transform">
+              <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-yellow-400 mb-2">
+                {onePieceMovies.length}
+              </div>
+              <div className="text-gray-200 font-semibold text-sm">Movies</div>
+            </div>
+            <div className="bg-gradient-to-br from-purple-800/20 to-pink-800/20 rounded-xl p-6 text-center border-2 border-purple-500/30 hover:border-purple-500 transition-colors duration-300 hover:scale-105 transform">
+              <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-2">
+                {onePieceSpecials.length}
+              </div>
+              <div className="text-gray-200 font-semibold text-sm">Specials</div>
+            </div>
+            <div className="bg-gradient-to-br from-blue-900/20 to-cyan-900/20 rounded-xl p-6 text-center border-2 border-blue-500/30 hover:border-blue-500 transition-colors duration-300 hover:scale-105 transform">
+              <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 mb-2">
                 {onePieceArcs.reduce((acc, saga) => acc + saga.arcs.length, 0)}
               </div>
-              <div className="text-gray-200 font-semibold text-lg">Story Arcs</div>
+              <div className="text-gray-200 font-semibold text-sm">Arcs</div>
             </div>
-            <div className="bg-gradient-to-br from-red-900/20 to-yellow-900/20 rounded-xl p-8 text-center border-2 border-red-500/30 hover:border-red-500 transition-colors duration-300 hover:scale-105 transform">
-              <div className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-yellow-400 mb-2">
+            <div className="bg-gradient-to-br from-teal-900/20 to-emerald-900/20 rounded-xl p-6 text-center border-2 border-teal-500/30 hover:border-teal-500 transition-colors duration-300 hover:scale-105 transform">
+              <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400 mb-2">
                 {onePieceArcs.length}
               </div>
-              <div className="text-gray-200 font-semibold text-lg">Sagas</div>
+              <div className="text-gray-200 font-semibold text-sm">Sagas</div>
             </div>
           </div>
         </div>
@@ -165,36 +178,73 @@ const Home = () => {
 
       {/* Browse by Arc */}
       {!searchResults && (
-        <div className="container mx-auto px-4 max-w-7xl w-full">
-          <div className="text-center mb-12">
-            <h3 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-op-orange via-red-500 to-yellow-400 mb-4">
-              Browse by Arc
-            </h3>
-            <p className="text-gray-400 text-lg">
-              Explore the epic journey from East Blue to the Final Saga
-            </p>
+        <>
+          {/* Featured Movies Section */}
+          <div className="container mx-auto px-4 max-w-7xl w-full mb-20">
+            <div className="text-center mb-12">
+              <h3 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-yellow-500 to-orange-500 mb-4">
+                🎬 Movies
+              </h3>
+              <p className="text-gray-400 text-lg">
+                Feature films and theatrical releases
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {onePieceMovies.map(movie => (
+                <MediaCard key={movie.id} media={movie} type="movie" />
+              ))}
+            </div>
           </div>
 
-          {onePieceArcs.map((saga, index) => (
-            <div key={saga.id} className="mb-16">
-              <div className="relative mb-8">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t-2 border-gradient-to-r from-transparent via-op-orange to-transparent opacity-30"></div>
-                </div>
-                <div className="relative flex justify-center">
-                  <h4 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-op-orange to-yellow-400 px-6 py-3 rounded-2xl bg-op-dark border-2 border-op-orange/50">
-                    {saga.saga}
-                  </h4>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {saga.arcs.map(arc => (
-                  <ArcCard key={arc.id} arc={arc} sagaName={saga.saga} />
-                ))}
-              </div>
+          {/* TV Specials & OVAs Section */}
+          <div className="container mx-auto px-4 max-w-7xl w-full mb-20">
+            <div className="text-center mb-12">
+              <h3 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 mb-4">
+                📺 TV Specials & OVAs
+              </h3>
+              <p className="text-gray-400 text-lg">
+                Special episodes and original video animations
+              </p>
             </div>
-          ))}
-        </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {onePieceSpecials.map(special => (
+                <MediaCard key={special.id} media={special} type="special" />
+              ))}
+            </div>
+          </div>
+
+          {/* Story Arcs Section */}
+          <div className="container mx-auto px-4 max-w-7xl w-full">
+            <div className="text-center mb-12">
+              <h3 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-op-orange via-red-500 to-yellow-400 mb-4">
+                Browse by Arc
+              </h3>
+              <p className="text-gray-400 text-lg">
+                Explore the epic journey from East Blue to the Final Saga
+              </p>
+            </div>
+
+            {onePieceArcs.map((saga, index) => (
+              <div key={saga.id} className="mb-16">
+                <div className="relative mb-8">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t-2 border-gradient-to-r from-transparent via-op-orange to-transparent opacity-30"></div>
+                  </div>
+                  <div className="relative flex justify-center">
+                    <h4 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-op-orange to-yellow-400 px-6 py-3 rounded-2xl bg-op-dark border-2 border-op-orange/50">
+                      {saga.saga}
+                    </h4>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {saga.arcs.map(arc => (
+                    <ArcCard key={arc.id} arc={arc} sagaName={saga.saga} />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
